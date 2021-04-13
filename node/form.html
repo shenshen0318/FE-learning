@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单</title>
+    <style>
+        .form {
+            width: 500px;
+            margin: auto;
+        }
+        .required {
+            color: crimson;
+        }
+        .item{
+            margin-top: 20px;
+        }
+        label {
+            display: inline-block;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .input {
+            display: inline-block;
+            width: 180px;
+            height: 28px;
+        }
+        button {
+            display: inline-block;
+            background-color: gold;
+            margin-top: 50px;
+            height: 30px;
+            outline: none;
+            width: 80px;
+            border: none;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- <form action="/form" method="GET"> -->
+    <div class="form">
+        <h3>联络我们</h3>
+        <h5>请填写以下资料，我们会尽快与您联络</h5>
+        <div class="required">* 必填</div>
+        <div class="item">
+            <label for="email">电子邮箱 <span class="required">*</span></label><br>
+            <input type="email" name="" id="email" checked class="input">
+        </div>
+        
+        <div class="item">
+            <label for="knowus">怎么知道我们公司的？<span class="required">*</span> </label><br>
+            <input type="radio" name="knowus" id="knowus" value="Google搜索"> <span class="lists">Goole搜索</span><br>
+            <input type="radio" name="knowus" id="knowus" value="亲友推荐"> <span class="lists">亲友推荐</span><br>
+            <input type="radio" name="knowus" id="knowus"> <span class="lists"></span><br>
+            <input type="radio" name="knowus" id="knowus"> <span class="lists"></span>
+        </div>
+
+        <div class="item">
+            <label for="">其他</label><br>
+            <span>其他想要填写的事项</span><br>
+            <input type="text" name="" id="" class="input">
+        </div>
+
+        <button type="submit" onclick="submit()">提交</button>
+    </div>    
+    <!-- </form> -->
+
+    <script>
+        let lists = document.querySelectorAll('.lists');
+        function submit() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('get', '/form', true);
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState === 4){
+                    if(xhr.status >=200 && xhr.status < 300){
+                        let res = JSON.parse(xhr.response);
+                        console.log(res);
+                        console.log(lists);
+                        for(let i=0; i<lists.length; i++){
+                            lists[i].innerHTML = res.lists[i].name;
+                        }
+                        
+                    }
+                }
+            }
+            xhr.send();
+        }
+        
+        
+    </script>
+</body>
+</html>
