@@ -125,8 +125,10 @@ Promise.PENDING = 'pending';
 Promise.FULFILLED = 'fulfilled';
 Promise.REJECTED = 'rejected';
 
-// Promise 的解析过程
 Promise.resolvePromise = function(promise2, x, resolve, reject){
+    // 只能调用一次函数
+    let called = false;
+
     // 1. x 与 promise2 相等
     if(promise2 === x){
         reject(new TypeError('Chaining cycle detected for promise'))
@@ -147,14 +149,22 @@ Promise.resolvePromise = function(promise2, x, resolve, reject){
             // 判断 x 有没有 then 方法
             if(typeof x.then === 'function'){
                 x.then((value)=>{
+                    if (called) return;
+                    called = true;
                     Promise.resolvePromise(promise2, value, resolve, reject)
                 }, (reason)=>{
+                    if (called) return;
+                    called = true;
                     reject(reason)
                 })
             }else{
+                if (called) return;
+                called = true;
                 resolve(x);
             }
         } catch (error) {
+            if (called) return;
+            called = true;
             reject(error);
         }
     }else {
